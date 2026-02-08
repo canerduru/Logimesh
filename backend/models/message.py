@@ -11,6 +11,14 @@ class MessageType(str, Enum):
     ACCEPT = "ACCEPT"
     REJECT = "REJECT"
 
+    # Phase 3 Additions
+    NEGOTIATION_START = "NEGOTIATION_START"
+    NEGOTIATION_ROUND = "NEGOTIATION_ROUND"
+    AGREEMENT_REACHED = "AGREEMENT_REACHED"
+    NEGOTIATION_FAILED = "NEGOTIATION_FAILED"
+    TRANSACTION_START = "TRANSACTION_START"
+    TRANSACTION_CONFIRM = "TRANSACTION_CONFIRM"
+
 class BaseMessagePayload(BaseModel):
     pass
 
@@ -33,6 +41,20 @@ class LoadRequestPayload(BaseMessagePayload):
 class CounterOfferPayload(BaseMessagePayload):
     original_message_id: str
     price: float
+    reason: Optional[str] = None
+    round_number: int = 1
+
+class NegotiationStartPayload(BaseMessagePayload):
+    load_id: str
+    fleet_id: str
+    initial_price: float
+    terms: Optional[str] = None
+
+class NegotiationResultPayload(BaseMessagePayload):
+    load_id: str
+    fleet_id: str
+    final_price: float
+    status: str # "AGREED" or "FAILED"
     reason: Optional[str] = None
 
 class AcceptPayload(BaseMessagePayload):

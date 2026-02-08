@@ -27,10 +27,17 @@ This directory contains the Python-based backend for the LogisticsMesh platform,
     pytest backend/tests/
     ```
 
-4.  **Running the Demo (Phase 2):**
+4.  **Running the Demo (Phase 2 & 3):**
     Simulate agent-to-agent communication without a database.
+
+    *Phase 2 (Basic Communication):*
     ```bash
     python -m backend.demo_phase2
+    ```
+
+    *Phase 3 (Negotiation & Transaction):*
+    ```bash
+    python -m backend.demo_phase3
     ```
 
 ## Directory Structure

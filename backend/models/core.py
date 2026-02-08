@@ -24,3 +24,14 @@ class Load(BaseModel):
     deadline: datetime
     status: str = "PENDING"
     price_offered: Optional[float] = None
+
+class Transaction(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    load_id: str
+    fleet_id: str
+    amount: float
+    carrier_company_id: str
+    shipper_company_id: str
+    status: str = "PENDING"
+    created_at: datetime = Field(default_factory=datetime.now)
+    finalized_at: Optional[datetime] = None
