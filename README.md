@@ -34,8 +34,8 @@ LogisticsMesh enables logistics companies to share fleet capacity and load deman
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/LogisticsMesh.git
-   cd LogisticsMesh
+   git clone https://github.com/canerduru/Logimesh.git
+   cd Logimesh
    ```
 
 2. **Database Setup:**
