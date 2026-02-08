@@ -1,0 +1,88 @@
+erDiagram
+    COMPANIES ||--o{ FLEETS : owns
+    COMPANIES ||--o{ LOADS : requests
+    COMPANIES ||--o{ ROUTES : simulates
+    COMPANIES ||--o{ AGENT_STATES : has
+    COMPANIES ||--o{ USER_PROFILES : employees
+
+    COMPANIES ||--o{ TRANSACTIONS : "shipper"
+    COMPANIES ||--o{ TRANSACTIONS : "carrier"
+
+    FLEETS ||--o{ TRANSACTIONS : fulfills
+    LOADS ||--|| TRANSACTIONS : matches
+
+    COMPANIES ||--o{ AGENT_MESSAGES : sends
+    COMPANIES ||--o{ AGENT_MESSAGES : receives
+
+    COMPANIES {
+        UUID id PK
+        TEXT name
+        TEXT country
+        INT fleet_size
+        FLOAT reputation_score
+    }
+
+    FLEETS {
+        UUID id PK
+        UUID company_id FK
+        TEXT vehicle_type
+        FLOAT capacity_tons
+        FLOAT lat
+        FLOAT lng
+        TEXT status
+    }
+
+    LOADS {
+        UUID id PK
+        UUID company_id FK
+        FLOAT origin_lat
+        FLOAT origin_lng
+        FLOAT dest_lat
+        FLOAT dest_lng
+        FLOAT weight
+        DATETIME deadline
+        TEXT status
+    }
+
+    ROUTES {
+        UUID id PK
+        UUID company_id FK
+        TEXT origin
+        TEXT destination
+        FLOAT profitability_score
+        JSONB data
+    }
+
+    AGENT_MESSAGES {
+        UUID id PK
+        UUID sender_id FK
+        UUID receiver_id FK
+        TEXT type
+        JSONB payload
+        DATETIME timestamp
+    }
+
+    TRANSACTIONS {
+        UUID id PK
+        UUID load_id FK
+        UUID fleet_id FK
+        UUID shipper_id FK
+        UUID carrier_id FK
+        FLOAT final_price
+        TEXT status
+    }
+
+    AGENT_STATES {
+        UUID id PK
+        UUID company_id FK
+        TEXT agent_type
+        JSONB state
+        DATETIME last_updated
+    }
+
+    USER_PROFILES {
+        UUID id PK
+        UUID company_id FK
+        TEXT role
+        TEXT full_name
+    }
