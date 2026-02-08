@@ -35,3 +35,31 @@ class Transaction(BaseModel):
     status: str = "PENDING"
     created_at: datetime = Field(default_factory=datetime.now)
     finalized_at: Optional[datetime] = None
+
+class RouteSimulation(BaseModel):
+    """
+    Represents the output of a route simulation run.
+    """
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    origin: str
+    destination: str
+    distance_km: float
+    estimated_duration_hours: float
+
+    # Cost Breakdown
+    fuel_cost: float
+    toll_cost: float
+    driver_cost: float
+    total_cost: float
+
+    # Revenue & Profit
+    expected_revenue: float
+    projected_profit: float
+    profit_margin: float
+
+    # Risk Analysis
+    risk_score: float = Field(..., description="0-100 score, higher is riskier")
+    return_load_probability: float = Field(..., description="0.0-1.0 probability")
+
+    scenarios_run: int = 1000
+    created_at: datetime = Field(default_factory=datetime.now)

@@ -40,6 +40,11 @@ This directory contains the Python-based backend for the LogisticsMesh platform,
     python -m backend.demo_phase3
     ```
 
+    *Phase 4 (Route Simulation & Risk Analysis):*
+    ```bash
+    python -m backend.demo_phase4
+    ```
+
 ## Directory Structure
 
 - `agents/`: Core logic for each agent type (Fleet, Load, Negotiation, etc.).
