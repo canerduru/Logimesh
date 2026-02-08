@@ -53,6 +53,13 @@ This directory contains the Python-based backend for the LogisticsMesh platform,
     ```
     Access at `http://localhost:3000/dashboard`
 
+6.  **Running n8n Automation (Phase 6):**
+    ```bash
+    cd n8n
+    docker-compose up -d
+    ```
+    Access at `http://localhost:5678`
+
 ## Directory Structure
 
 - `agents/`: Core logic for each agent type (Fleet, Load, Negotiation, etc.).

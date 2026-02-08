@@ -1,0 +1,131 @@
+{
+  "name": "Invoice Generation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "transaction-completed",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"body\"][\"record\"][\"status\"]}}",
+              "value2": "COMPLETED"
+            }
+          ]
+        }
+      },
+      "name": "IF Completed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "html": "<html><body><h1>INVOICE #{{$node[\"Webhook\"].json[\"body\"][\"record\"][\"id\"]}}</h1><p>From: Carrier A</p><p>To: Shipper B</p><hr><p>Amount Due: <b>${{$node[\"Webhook\"].json[\"body\"][\"record\"][\"final_price\"]}}</b></p><p>Status: PAID</p></body></html>"
+      },
+      "name": "Generate HTML",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "htmlToPdf",
+        "html": "={{$node[\"Generate HTML\"].json[\"html\"]}}",
+        "fileName": "invoice_{{$node[\"Webhook\"].json[\"body\"][\"record\"][\"id\"]}}.pdf"
+      },
+      "name": "Create PDF",
+      "type": "n8n-nodes-base.pdf",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "billing@logisticsmesh.com",
+        "toEmail": "admin@logisticsmesh.com",
+        "subject": "Invoice for Transaction #{{$node[\"Webhook\"].json[\"body\"][\"record\"][\"id\"]}}",
+        "text": "Please find attached the invoice for the recently completed transaction.",
+        "attachments": [
+          {
+            "filename": "invoice.pdf",
+            "content": "={{$node[\"Create PDF\"].binary.data}}"
+          }
+        ]
+      },
+      "name": "Email Invoice",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IF Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Completed": {
+      "main": [
+        [
+          {
+            "node": "Generate HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate HTML": {
+      "main": [
+        [
+          {
+            "node": "Create PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create PDF": {
+      "main": [
+        [
+          {
+            "node": "Email Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

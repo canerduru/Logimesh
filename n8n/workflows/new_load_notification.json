@@ -1,0 +1,95 @@
+{
+  "name": "New Load Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-load",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"body\"][\"record\"][\"status\"]}}",
+              "value2": "PENDING"
+            }
+          ]
+        }
+      },
+      "name": "IF Pending",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "notifications@logisticsmesh.com",
+        "toEmail": "carrier-network@logisticsmesh.com",
+        "subject": "New Load Available: {{$node[\"Webhook\"].json[\"body\"][\"record\"][\"origin_lat\"]}} -> {{$node[\"Webhook\"].json[\"body\"][\"record\"][\"destination_lat\"]}}",
+        "text": "A new load has been posted.\n\nWeight: {{$node[\"Webhook\"].json[\"body\"][\"record\"][\"weight_tons\"]}} tons\nPrice: ${{$node[\"Webhook\"].json[\"body\"][\"record\"][\"price_offered\"]}}\nDeadline: {{$node[\"Webhook\"].json[\"body\"][\"record\"][\"deadline\"]}}\n\nLog in to the dashboard to view details."
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        650,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "loads-feed",
+        "text": ":truck: *New Load Alert*\nOrigin: {{$node[\"Webhook\"].json[\"body\"][\"record\"][\"origin_lat\"]}}\nDest: {{$node[\"Webhook\"].json[\"body\"][\"record\"][\"destination_lat\"]}}\nPrice: ${{$node[\"Webhook\"].json[\"body\"][\"record\"][\"price_offered\"]}}"
+      },
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        650,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IF Pending",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Pending": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
