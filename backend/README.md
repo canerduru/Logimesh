@@ -45,6 +45,14 @@ This directory contains the Python-based backend for the LogisticsMesh platform,
     python -m backend.demo_phase4
     ```
 
+5.  **Running the Frontend Dashboard (Phase 5):**
+    ```bash
+    cd frontend
+    npm install
+    npm run dev
+    ```
+    Access at `http://localhost:3000/dashboard`
+
 ## Directory Structure
 
 - `agents/`: Core logic for each agent type (Fleet, Load, Negotiation, etc.).
